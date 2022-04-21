@@ -329,19 +329,34 @@ double evalHSBSFBmv()
     cudaMalloc(&fC, nblockrows * sizeof(uchar));
     setDeviceValArr<int, uchar><<<1, 1>>>(fC, nblockrows, 0);
 
+<<<<<<< HEAD
     int gridDim = (int)ceil(cbrt((double)nblockrows / 8));
+=======
+    // int gridDim = (int)ceil(cbrt((double)nblockrows / (8*32)));
+    int gridDim = (int)ceil(cbrt((double)nblockrows / 32));
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
     dim3 grid(gridDim, gridDim, gridDim);
 #elif TILEDIM == 8
     cudaMalloc(&fC, nblockrows * sizeof(uchar));
     setDeviceValArr<int, uchar><<<1, 1>>>(fC, nblockrows, 0);
 
+<<<<<<< HEAD
     int gridDim = (int)ceil(cbrt((double)nblockrows / 4));
+=======
+    // int gridDim = (int)ceil(cbrt((double)nblockrows / 4));
+    int gridDim = (int)ceil(cbrt((double)nblockrows / (4*32)));
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
     dim3 grid(gridDim, gridDim, gridDim);
 #elif TILEDIM == 16
     cudaMalloc(&fC, nblockrows * sizeof(ushort));
     setDeviceValArr<int, ushort><<<1, 1>>>(fC, nblockrows, 0);
 
+<<<<<<< HEAD
     int gridDim = (int)ceil(cbrt((double)nblockrows / 2));
+=======
+    // int gridDim = (int)ceil(cbrt((double)nblockrows / 2));
+    int gridDim = (int)ceil(cbrt((double)nblockrows / (2*32)));
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
     dim3 grid(gridDim, gridDim, gridDim);
 #elif TILEDIM == 32
     cudaMalloc(&fC, nblockrows * sizeof(unsigned));
@@ -358,11 +373,19 @@ double evalHSBSFBmv()
     for (int i = 0; i < TEST_TIMES; i++)
     {
 #if TILEDIM == 4
+<<<<<<< HEAD
         bmv4_bin_bin_bin<<<grid, 32>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
 #elif TILEDIM == 8
         bmv8_bin_bin_bin<<<grid, 32>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
 #elif TILEDIM == 16
         bmv16_bin_bin_bin<<<grid, 32>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
+=======
+        bmv4_bin_bin_bin_new_1024<<<grid, 1024>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
+#elif TILEDIM == 8
+        bmv8_bin_bin_bin_1024<<<grid, 1024>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
+#elif TILEDIM == 16
+        bmv16_bin_bin_bin_1024<<<grid, 1024>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
 #elif TILEDIM == 32
         bmv32_bin_bin_bin<<<grid, 1024>>>(tA, tB, fC, bsrRowPtr, bsrColInd, nblockrows);
 #endif
@@ -430,7 +453,11 @@ void verifyResult()
     // copy result to host for verification
     result_cusparsecsrspmvfloat = (float *)malloc(nrows * sizeof(float));
     cudaMemcpy(result_cusparsecsrspmvfloat, dY, nrows * sizeof(float), cudaMemcpyDeviceToHost);
+<<<<<<< HEAD
     // printHostVec(result_cusparsecsrspmvfloat, nrows);
+=======
+    //printHostVec(result_cusparsecsrspmvfloat, nrows);
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
 
     // copy result to host for verification
     cudaMalloc((void **)&fC_full, sizeof(float) * tiledim * nblockrows);
@@ -446,7 +473,11 @@ void verifyResult()
 #endif
 
 #if TILEDIM == 4
+<<<<<<< HEAD
 // bin2full<uchar><<<(int)ceil(nblockrows / 1024.0), 1024>>>(fC, fC_full, nblockrows, 4);
+=======
+//bin2full<uchar><<<(int)ceil(nblockrows / 1024.0), 1024>>>(fC, fC_full, nblockrows, 4);
+>>>>>>> fb9c752aaae97a5d91a5b7c531abd720baddbce0
 #elif TILEDIM == 8
     printBin8Vec<<<1, 1>>>(fC, nblockrows);
 #elif TILEDIM == 16
